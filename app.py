@@ -19,6 +19,24 @@ st.set_page_config(layout="wide")
 st.title("Resume Builder")
 months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
+if not st.session_state.valid_user:
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        with st.container(border=True):
+            st.markdown("### 🔐 Login")
+
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
+            if st.button("Login"):
+                if username == st.secrets["APP_USERNAME"] and password == st.secrets["APP_PASSWORD"]:
+                    st.session_state.valid_user = True
+                    st.session_state.user = st.secrets["APP_PROFILE"]
+                    st.rerun()
+                else:
+                    st.error("Invalid credentials")
+            st.stop()
+
+
 # ---------------- INIT ----------------
 def init_role():
     return {
