@@ -17,7 +17,7 @@ A dynamic resume builder application that allows users to create, edit, and mana
 ---
 
 ## 🏗️ Architecture Overview
-
+```bash
 Streamlit UI
      ⬇
 Session State (Resume Data)
@@ -27,6 +27,7 @@ JSON Storage (AWS S3)
 PDF Generator (ReportLab)
      ⬇
 S3 Upload (Final Resume PDF)
+```
 
 ---
 
