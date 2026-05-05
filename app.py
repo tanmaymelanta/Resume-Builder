@@ -19,6 +19,8 @@ st.set_page_config(layout="wide")
 st.title("Resume Builder")
 months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
+if "valid_user" not in st.session_state:
+    st.session_state.valid_user = False
 if not st.session_state.valid_user:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
