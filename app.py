@@ -85,12 +85,12 @@ def create_resume_from_data(data, output_pdf):
 
     # ---------- STYLES ----------
     name_style = ParagraphStyle(name="Name", fontName="Helvetica-Bold", fontSize=16, alignment=TA_CENTER,
-                                spaceAfter=6)
+                                spaceAfter=10)
     contact_style = ParagraphStyle(name="Contact", fontName="Helvetica", fontSize=9, alignment=TA_CENTER,
                                    textColor="#444444", spaceAfter=8)
     section_style = ParagraphStyle(name="Section", fontName="Helvetica-Bold", fontSize=11, spaceBefore=6,
-                                   spaceAfter=4)
-    divider = HRFlowable(width="100%", thickness=0.5, color="#999999", spaceBefore=4, spaceAfter=6)
+                                   spaceAfter=5)
+    divider = HRFlowable(width="100%", thickness=0.5, color="#999999", spaceBefore=4, spaceAfter=7)
     divider_white = HRFlowable(width="100%", thickness=0, color="#ffffff", spaceBefore=0, spaceAfter=0)
     body_style_bold = ParagraphStyle(name="Body", fontName="Helvetica-Bold", fontSize=9, leading=12)
     body_style = ParagraphStyle(name="Body", fontName="Helvetica", fontSize=9, leading=12)
