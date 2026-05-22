@@ -32,7 +32,7 @@ if not st.session_state.valid_user:
             if st.button("Login"):
                 if username == st.secrets["APP_USERNAME"] and password == st.secrets["APP_PASSWORD"]:
                     st.session_state.valid_user = True
-                    st.session_state.user = st.secrets["APP_PROFILE"]
+                    st.session_state.user = st.secrets["APP_USERNAME"]
                     st.rerun()
                 else:
                     st.error("Invalid credentials")
