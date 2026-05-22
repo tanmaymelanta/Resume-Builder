@@ -344,7 +344,7 @@ for role_key, tab in tabs.items():
 
             c1, c2, c3 = st.columns([4, 1, 1])
             p["name"] = c1.text_input("Project Name", p["name"], key=f"{role_key}_proj_name_{i}", disabled=disabled)
-            p["mon"] = c2.selectbox("Month", months, key=f"{role_key}_proj_mon_{i}", disabled=disabled)
+            p["mon"] = c2.selectbox("Month", p["mon"], key=f"{role_key}_proj_mon_{i}", disabled=disabled)
             p["year"] = c3.text_input("Year", p["year"], key=f"{role_key}_proj_year_{i}", disabled=disabled)
             p["desc"] = st.text_area("Description", p["desc"], key=f"{role_key}_proj_desc_{i}", disabled=disabled)
 
