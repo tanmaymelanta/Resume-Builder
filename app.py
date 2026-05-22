@@ -1,4 +1,4 @@
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, HRFlowable, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, HRFlowable, Table, TableStyle, PageBreak
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
 import streamlit as st
@@ -145,7 +145,7 @@ def create_resume_from_data(data, output_pdf):
         content.append(divider_white)
 
     # ---------- PAGE BREAKER ----------
-    content.append("\n\n\n\n\n\n\n")
+    content.append(PageBreak())
     
     # ---------- PROJECTS ----------
     content.append(Paragraph("PROJECTS", section_style))
