@@ -145,14 +145,7 @@ def create_resume_from_data(data, output_pdf):
         content.append(divider_white)
 
     # ---------- PAGE BREAKER ----------
-    content.append("
-
-
-
-
-
-    
-    ")
+    content.append("\n\n\n\n\n\n\n")
     
     # ---------- PROJECTS ----------
     content.append(Paragraph("PROJECTS", section_style))
