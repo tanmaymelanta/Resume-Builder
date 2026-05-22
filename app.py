@@ -143,6 +143,7 @@ def create_resume_from_data(data, output_pdf):
             content.append(p)
         content.append(Spacer(1, 4))
         content.append(divider_white)
+    content.append(divider_white)
 
     # ---------- PROJECTS ----------
     content.append(Paragraph("PROJECTS", section_style))
