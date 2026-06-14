@@ -55,9 +55,35 @@ def init_role():
         "Skills": [],
         "Experience": [],
         "Projects": [],
-        "Education": [],
-        "Certifications": [],
-        "Languages": []
+        "Education": [
+            {
+                "school": "University of Mumbai",
+                "degree": "Master of Science",
+                "year":"2021"
+             },
+            {
+                "school": "SIES College of Arts, Science & Commerce",
+                "degree":"Bachelor of Science",
+                "year": "2019"
+            }
+        ],
+        "Certifications": [
+            {
+                "name": "AWS Cloud Technical Essentials",
+                "url": "https://www.coursera.org/account/accomplishments/specialization/certificate/L23967KKA851",
+                "year":"2026"
+            },
+            {
+                "name": "Google Data Analytics",
+                "url":"https://www.coursera.org/account/accomplishments/specialization/certificate/SKA2AMB3V78P",
+                "year": "2023"
+            }
+        ],
+        "Languages": [
+            {"name": "English (Native proficiency)"},
+            {"name": "Hindi (Native proficiency)"},
+            {"name": "Marathi (Native proficiency)"}
+        ]
     }
 
 def upload_to_s3(data, filename):
