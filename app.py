@@ -128,12 +128,12 @@ def create_resume_from_data(data, output_pdf):
     content.append(Paragraph(data["Name"], name_style))
 
     contact = data["Contact"]
-    contact_text = f"""
+    contact_text = f'''
     {contact['Address']} • {contact['Phone']} •
     <a href="mailto:{contact['Email']}">{contact['Email']}</a> •
     <a href="{contact['LinkedIn']}">linkedin.com/in/tanmay-melanta</a> •
     <a href="{contact['GitHub']}">github.com/tanmaymelanta</a>
-    """
+    '''
     content.append(Paragraph(contact_text, contact_style))
 
     # ---------- SUMMARY ----------
@@ -236,27 +236,31 @@ if "resume_data" not in st.session_state:
     st.session_state.resume_data = {
         "DS": init_role(),
         "CDE": init_role(),
-        "SA": init_role()
+        "SA": init_role(),
+        "Custom": init_role(),
     }
 
 if "edit_mode" not in st.session_state:
     st.session_state.edit_mode = {
         "DS": False,
         "CDE": False,
-        "SA": False
+        "SA": False,
+        "Custom": False
     }
 
 # ---------------- TABS ----------------
-tab1, tab2, tab3 = st.tabs([
+tab1, tab2, tab3, tab4 = st.tabs([
     "Data Scientist",
     "Cloud Data Engineer",
-    "Solutions Architect"
+    "Solutions Architect",
+    "Custom"
 ])
 
 tabs = {
     "DS": tab1,
     "CDE": tab2,
-    "SA": tab3
+    "SA": tab3,
+    "Custom": tab4
 }
 
 # ---------------- MAIN ----------------
@@ -289,7 +293,10 @@ for role_key, tab in tabs.items():
                 upload_to_s3(data, f"{role_key}_resume")
                 generate_and_upload_pdf(data, f"{role_key}")
 
-        disabled = not st.session_state.edit_mode[role_key]
+        if role_key == "Custom":
+            disabled = st.session_state.edit_mode[role_key]
+        else:
+            disabled = not st.session_state.edit_mode[role_key]
 
         # ---------- BASIC INFO ----------
         data["Target Roles"] = st.text_input(
