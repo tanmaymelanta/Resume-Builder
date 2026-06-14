@@ -316,22 +316,30 @@ for role_key, tab in tabs.items():
         # ---------- SKILLS ----------
         st.subheader("Skills")
 
-        if st.session_state.edit_mode[role_key] and st.button(f"Add Skill {role_key}"):
-            data["Skills"].append({"title": "", "items": ""})
-        delete_index = None
-
-        for i in range(len(data["Skills"])):
-            s = data["Skills"][i]
-            c1, c2, c3 = st.columns([4, 6, 1])
-            s["title"] = c1.text_input("Title", s["title"], key=f"{role_key}_skill_title_{i}", disabled=disabled)
-            s["items"] = c2.text_input("Items", s["items"], key=f"{role_key}_skill_items_{i}", disabled=disabled)
-            c3.markdown("""<div style="height:28px;"></div>""", unsafe_allow_html=True)
-            if st.session_state.edit_mode[role_key] and c3.button("❌", key=f"{role_key}_del_skill_{i}"):
-                delete_index = i
-
-        if delete_index is not None:
-            data["Skills"].pop(delete_index)
-            st.rerun()
+        if role_key == "Custom":
+            data["Skills"] = st.text_area(
+                "Skills Json",
+                "",
+                key=f"{role_key}_summary",
+                disabled=disabled
+            ))
+        else:
+            if st.session_state.edit_mode[role_key] and st.button(f"Add Skill {role_key}"):
+                data["Skills"].append({"title": "", "items": ""})
+            delete_index = None
+    
+            for i in range(len(data["Skills"])):
+                s = data["Skills"][i]
+                c1, c2, c3 = st.columns([4, 6, 1])
+                s["title"] = c1.text_input("Title", s["title"], key=f"{role_key}_skill_title_{i}", disabled=disabled)
+                s["items"] = c2.text_input("Items", s["items"], key=f"{role_key}_skill_items_{i}", disabled=disabled)
+                c3.markdown("""<div style="height:28px;"></div>""", unsafe_allow_html=True)
+                if st.session_state.edit_mode[role_key] and c3.button("❌", key=f"{role_key}_del_skill_{i}"):
+                    delete_index = i
+    
+            if delete_index is not None:
+                data["Skills"].pop(delete_index)
+                st.rerun()
 
         # ---------- EXPERIENCE ----------
         st.subheader("Experience")
