@@ -294,9 +294,9 @@ for role_key, tab in tabs.items():
                 generate_and_upload_pdf(data, f"{role_key}")
 
         if role_key == "Custom":
-            disabled = False
-        else:
-            disabled = not st.session_state.edit_mode[role_key]
+            st.session_state.edit_mode[role_key] = True
+        
+        disabled = not st.session_state.edit_mode[role_key]
 
         # ---------- BASIC INFO ----------
         data["Target Roles"] = st.text_input(
