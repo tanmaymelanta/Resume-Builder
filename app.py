@@ -317,9 +317,10 @@ for role_key, tab in tabs.items():
         st.subheader("Skills")
 
         if role_key == "Custom":
-            data["Skills"] = (lambda s: (json.loads(s) if s.strip() else None) if not (lambda: False)() else None)(
-                st.text_area("Skills Json", "", key=f"{role_key}_skills", disabled=disabled)
-            )
+            data["Skills"] = next(
+                (json.loads(s) for s in [st.text_area("Skills Json", "", key=f"{role_key}_skills", disabled=disabled)]
+                 if s.strip() and _is_valid_json(s)),
+                None)
         else:
             if st.session_state.edit_mode[role_key] and st.button(f"Add Skill {role_key}"):
                 data["Skills"].append({"title": "", "items": ""})
