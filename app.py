@@ -377,52 +377,6 @@ for role_key, tab in tabs.items():
             p["mon"] = c2.selectbox("Month", months, index=default_index, key=f"{role_key}_proj_mon_{i}", disabled=disabled)
             p["year"] = c3.text_input("Year", p["year"], key=f"{role_key}_proj_year_{i}", disabled=disabled)
             p["desc"] = st.text_area("Description", p["desc"], key=f"{role_key}_proj_desc_{i}", disabled=disabled)
-
-        # ---------- EDUCATION ----------
-        st.subheader("Education")
-
-        if st.session_state.edit_mode[role_key] and st.button(f"Add Edu {role_key}"):
-            data["Education"].append({"school": "", "degree": "", "year": ""})
-
-        for i, ed in enumerate(data["Education"]):
-            c1, c2 = st.columns([3.5, 1])
-            c1.markdown(f"##### Education {i+1}")
-            if st.session_state.edit_mode[role_key] and c2.button("Delete", key=f"{role_key}_del_ed_{i}", use_container_width=True):
-                data["Education"].pop(i)
-                st.rerun()
-
-            ed["school"] = st.text_input("School", ed["school"], key=f"{role_key}_school_{i}", disabled=disabled)
-            ed["degree"] = st.text_input("Degree", ed["degree"], key=f"{role_key}_degree_{i}", disabled=disabled)
-            ed["year"] = st.text_input("Year", ed["year"], key=f"{role_key}_year_{i}", disabled=disabled)
-
-        # ---------- CERTIFICATIONS ----------
-        st.subheader("Certifications")
-        if st.session_state.edit_mode[role_key] and st.button(f"Add Cert {role_key}"):
-            data["Certifications"].append({"name": "", "url": "", "year": ""})
-
-        for i, c in enumerate(data["Certifications"]):
-            c1, c2, c3, c4 = st.columns([3, 4, 1, 1])
-            c["name"] = c1.text_input("Certification", c["name"], key=f"{role_key}_cert_{i}", disabled=disabled)
-            c["url"] = c2.text_input("Link", c["url"], key=f"{role_key}_cert_url_{i}", disabled=disabled)
-            c["year"] = c3.text_input("Year", c["year"], key=f"{role_key}_cert_year_{i}", disabled=disabled)
-            c4.markdown("""<div style="height:28px;"></div>""", unsafe_allow_html=True)
-            if st.session_state.edit_mode[role_key] and c4.button("Delete", key=f"{role_key}_del_cert_{i}",use_container_width=True):
-                data["Certifications"].pop(i)
-                st.rerun()
-
-        # ---------- LANGUAGES ----------
-        st.subheader("Languages")
-
-        if st.session_state.edit_mode[role_key] and st.button(f"Add Language"):
-            data["Languages"].append({"name": ""})
-
-        for i, l in enumerate(data["Languages"]):
-            c1, c2 = st.columns([3.5, 1])
-            l["name"] = c1.text_input("Language", l["name"], key=f"{role_key}_lang_{i}", disabled=disabled)
-            c2.markdown("""<div style="height:28px;"></div>""", unsafe_allow_html=True)
-            if st.session_state.edit_mode[role_key] and c2.button("Delete", key=f"{role_key}_del_lang_{i}"):
-                data["Languages"].pop(i)
-                st.rerun()
                 
         # ---------- PREVIEW ----------
         st.subheader("Preview JSON")
