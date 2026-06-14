@@ -320,7 +320,7 @@ for role_key, tab in tabs.items():
             data["Skills"] = st.text_area(
                 "Skills Json",
                 "",
-                key=f"{role_key}_summary",
+                key=f"{role_key}_skills",
                 disabled=disabled
             )
         else:
