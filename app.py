@@ -294,7 +294,7 @@ for role_key, tab in tabs.items():
                 generate_and_upload_pdf(data, f"{role_key}")
 
         if role_key == "Custom":
-            disabled = st.session_state.edit_mode[role_key]
+            disabled = False
         else:
             disabled = not st.session_state.edit_mode[role_key]
 
