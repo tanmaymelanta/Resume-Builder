@@ -322,7 +322,7 @@ for role_key, tab in tabs.items():
                 "",
                 key=f"{role_key}_summary",
                 disabled=disabled
-            ))
+            )
         else:
             if st.session_state.edit_mode[role_key] and st.button(f"Add Skill {role_key}"):
                 data["Skills"].append({"title": "", "items": ""})
