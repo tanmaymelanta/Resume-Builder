@@ -142,6 +142,38 @@ def parse_custom_experience(text):
         experiences.append(exp)
     return experiences
 
+def parse_custom_projects(text):
+    projects = []
+    for block in text.split("\n---\n"):
+        block = block.strip()
+        if not block:
+            continue
+        proj = {
+            "name": "",
+            "mon": "Jan",
+            "year": "",
+            "desc": ""
+        }
+        lines = block.splitlines()
+        desc_started = False
+        desc_lines = []
+        for line in lines:
+            line = line.strip()
+            if desc_started:
+                desc_lines.append(line)
+                continue
+            if line.startswith("Project:"):
+                proj["name"] = line.replace("Project:", "", 1).strip()
+            elif line.startswith("Month:"):
+                proj["mon"] = line.replace("Month:", "", 1).strip()
+            elif line.startswith("Year:"):
+                proj["year"] = line.replace("Year:", "", 1).strip()
+            elif line.startswith("Description:"):
+                desc_started = True
+        proj["desc"] = "\n".join(desc_lines).strip()
+        projects.append(proj)
+    return projects
+
 def upload_to_s3(data, filename):
     s3.put_object(
         Bucket="resume-tanmay",
@@ -438,23 +470,31 @@ for role_key, tab in tabs.items():
     
         # ---------- PROJECTS ----------
         st.subheader("Projects")
-
-        if st.session_state.edit_mode[role_key] and st.button(f"Add Project {role_key}"):
-            data["Projects"].append({"name": "", "year": "", "desc": ""})
-
-        for i, p in enumerate(data["Projects"]):
-            c1, c2 = st.columns([3.5, 1])
-            c1.markdown(f"##### Project {i+1}")
-            if st.session_state.edit_mode[role_key] and c2.button("Delete", key=f"{role_key}_del_proj_{i}", use_container_width=True):
-                data["Projects"].pop(i)
-                st.rerun()
-
-            c1, c2, c3 = st.columns([4, 1, 1])
-            p["name"] = c1.text_input("Project Name", p["name"], key=f"{role_key}_proj_name_{i}", disabled=disabled)
-            default_index = months.index(p["mon"])
-            p["mon"] = c2.selectbox("Month", months, index=default_index, key=f"{role_key}_proj_mon_{i}", disabled=disabled)
-            p["year"] = c3.text_input("Year", p["year"], key=f"{role_key}_proj_year_{i}", disabled=disabled)
-            p["desc"] = st.text_area("Description", p["desc"], key=f"{role_key}_proj_desc_{i}", disabled=disabled)
+        if role_key == "Custom":
+            custom_projects = st.text_area(
+                "",
+                height=300,
+                key=f"{role_key}_projects",
+                disabled=disabled
+            )
+            data["Projects"] = parse_custom_projects(custom_projects)
+        else:
+            if st.session_state.edit_mode[role_key] and st.button(f"Add Project {role_key}"):
+                data["Projects"].append({"name": "", "year": "", "desc": ""})
+    
+            for i, p in enumerate(data["Projects"]):
+                c1, c2 = st.columns([3.5, 1])
+                c1.markdown(f"##### Project {i+1}")
+                if st.session_state.edit_mode[role_key] and c2.button("Delete", key=f"{role_key}_del_proj_{i}", use_container_width=True):
+                    data["Projects"].pop(i)
+                    st.rerun()
+    
+                c1, c2, c3 = st.columns([4, 1, 1])
+                p["name"] = c1.text_input("Project Name", p["name"], key=f"{role_key}_proj_name_{i}", disabled=disabled)
+                default_index = months.index(p["mon"])
+                p["mon"] = c2.selectbox("Month", months, index=default_index, key=f"{role_key}_proj_mon_{i}", disabled=disabled)
+                p["year"] = c3.text_input("Year", p["year"], key=f"{role_key}_proj_year_{i}", disabled=disabled)
+                p["desc"] = st.text_area("Description", p["desc"], key=f"{role_key}_proj_desc_{i}", disabled=disabled)
                 
         # ---------- PREVIEW ----------
         st.subheader("Preview JSON")
