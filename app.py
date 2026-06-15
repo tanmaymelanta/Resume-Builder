@@ -332,12 +332,7 @@ for role_key, tab in tabs.items():
 
         if role_key == "Custom":
             custom_skills = st.text_area(
-                """
-                Skills
-                Format:
-                Languages: Python, SQL, PySpark
-                Cloud & Data Platforms: AWS, Snowflake
-                """,
+                "",
                 key=f"{role_key}_skills",
                 disabled=disabled
             )
