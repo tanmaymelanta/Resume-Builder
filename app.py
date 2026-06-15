@@ -6,7 +6,6 @@ from datetime import date, datetime
 import json
 import boto3
 import tempfile
-import re
 
 # ---------------- AWS ----------------
 s3 = boto3.client(
@@ -38,7 +37,6 @@ if not st.session_state.valid_user:
                 else:
                     st.error("Invalid credentials")
             st.stop()
-
 
 # ---------------- INIT ----------------
 def init_role():
@@ -87,14 +85,20 @@ def init_role():
         ]
     }
 
-def format_json_string(raw_text: str) -> str:
-    fixed = re.sub(
-        r'("\s*)\n\s*(")',
-        r'\1,\n\2',
-        raw_text
-    )
-    data = json.loads(fixed)
-    return json.dumps(data, indent=4)
+def parse_custom_skills(text):
+    skills = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if ":" not in line:
+            continue
+        title, items = line.split(":", 1)
+        skills.append({
+            "title": title.strip(),
+            "items": items.strip()
+        })
+    return skills
 
 def upload_to_s3(data, filename):
     s3.put_object(
@@ -327,14 +331,17 @@ for role_key, tab in tabs.items():
         st.subheader("Skills")
 
         if role_key == "Custom":
-            data["Skills"] = format_json_string(
-                st.text_area(
-                    "Skills Json", 
-                    "",
-                    key=f"{role_key}_skills", 
-                    disabled=disabled
-                )
+            custom_skills = st.text_area(
+                """
+                Skills
+                Format:
+                Languages: Python, SQL, PySpark
+                Cloud & Data Platforms: AWS, Snowflake
+                """,
+                key=f"{role_key}_skills",
+                disabled=disabled
             )
+            data["Skills"] = parse_custom_skills(custom_skills)
         else:
             if st.session_state.edit_mode[role_key] and st.button(f"Add Skill {role_key}"):
                 data["Skills"].append({"title": "", "items": ""})
