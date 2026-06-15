@@ -327,7 +327,6 @@ for role_key, tab in tabs.items():
         st.subheader("Skills")
 
         if role_key == "Custom":
-            data["Skills"].append({"title": "", "items": ""})
             data["Skills"] = format_json_string(
                 st.text_area(
                     "Skills Json", 
