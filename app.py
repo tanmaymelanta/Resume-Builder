@@ -329,8 +329,7 @@ for role_key, tab in tabs.items():
         if role_key == "Custom":
             data["Skills"] = format_json_string(
                 st.text_area(
-                    "Skills Json", 
-                    "", 
+                    "Skills Json",  
                     key=f"{role_key}_skills", 
                     disabled=disabled
                 )
