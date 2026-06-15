@@ -86,6 +86,15 @@ def init_role():
         ]
     }
 
+def format_json_string(raw_text: str) -> str:
+    fixed = re.sub(
+        r'("\s*)\n\s*(")',
+        r'\1,\n\2',
+        raw_text
+    )
+    data = json.loads(fixed)
+    return json.dumps(data, indent=4)
+
 def upload_to_s3(data, filename):
     s3.put_object(
         Bucket="resume-tanmay",
@@ -317,17 +326,13 @@ for role_key, tab in tabs.items():
         st.subheader("Skills")
 
         if role_key == "Custom":
-            def parse_skills(s):
-                if not s.strip():
-                    return None
-                try:
-                    return json.loads(s)
-                except json.JSONDecodeError as e:
-                    st.error(f"Invalid JSON in Skills field: {e}")
-                    st.stop()
-            
-            data["Skills"] = parse_skills(
-                st.text_area("Skills Json", "", key=f"{role_key}_skills", disabled=disabled)
+            data["Skills"] = format_json_string(
+                st.text_area(
+                    "Skills Json", 
+                    "", 
+                    key=f"{role_key}_skills", 
+                    disabled=disabled
+                )
             )
         else:
             if st.session_state.edit_mode[role_key] and st.button(f"Add Skill {role_key}"):
