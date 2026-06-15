@@ -100,6 +100,48 @@ def parse_custom_skills(text):
         })
     return skills
 
+def parse_custom_experience(text):
+    experiences = []
+    for block in text.split("\n---\n"):
+        block = block.strip()
+        if not block:
+            continue
+        exp = {
+            "company": "",
+            "role": "",
+            "start": date.today(),
+            "end": date.today(),
+            "present": False,
+            "desc": ""
+        }
+        lines = block.splitlines()
+        desc_started = False
+        desc_lines = []
+        for line in lines:
+            line = line.strip()
+            if desc_started:
+                desc_lines.append(line)
+                continue
+            if line.startswith("Company:"):
+                exp["company"] = line.replace("Company:", "", 1).strip()
+            elif line.startswith("Role:"):
+                exp["role"] = line.replace("Role:", "", 1).strip()
+            elif line.startswith("Start:"):
+                exp["start"] = date.fromisoformat(
+                    line.replace("Start:", "", 1).strip()
+                )
+            elif line.startswith("End:"):
+                end_value = line.replace("End:", "", 1).strip()
+                if end_value.lower() == "present":
+                    exp["present"] = True
+                else:
+                    exp["end"] = date.fromisoformat(end_value)
+            elif line.startswith("Description:"):
+                desc_started = True
+        exp["desc"] = "\n".join(desc_lines).strip()
+        experiences.append(exp)
+    return experiences
+
 def upload_to_s3(data, filename):
     s3.put_object(
         Bucket="resume-tanmay",
@@ -329,7 +371,6 @@ for role_key, tab in tabs.items():
 
         # ---------- SKILLS ----------
         st.subheader("Skills")
-
         if role_key == "Custom":
             custom_skills = st.text_area(
                 "",
@@ -357,36 +398,44 @@ for role_key, tab in tabs.items():
 
         # ---------- EXPERIENCE ----------
         st.subheader("Experience")
-
-        if st.session_state.edit_mode[role_key] and st.button(f"Add Exp {role_key}"):
-            data["Experience"].append({
-                "company": "",
-                "role": "",
-                "start": date.today(),
-                "end": date.today(),
-                "present": False,
-                "desc": ""
-            })
-
-        for i, e in enumerate(data["Experience"]):
-            c1, c2 = st.columns([3.5, 1])
-            c1.markdown(f"##### Experience {i+1}")
-            if st.session_state.edit_mode[role_key] and c2.button("Delete", key=f"{role_key}_del_exp_{i}", use_container_width=True):
-                data["Experience"].pop(i)
-                st.rerun()
-
-            c1, c2 = st.columns(2)
-            e["company"] = c1.text_input("Company", e["company"], key=f"{role_key}_comp_{i}", disabled=disabled)
-            e["role"] = c2.text_input("Role", e["role"], key=f"{role_key}_role_{i}", disabled=disabled)
-
-            c1, c2, c3 = st.columns(3)
-            e["start"] = c1.date_input("Start", e["start"], key=f"{role_key}_start_{i}", disabled=disabled)
-            e["end"] = c2.date_input("End", e["end"], key=f"{role_key}_end_{i}", disabled=disabled)
-            c3.markdown("""<div style="height:34px;"></div>""", unsafe_allow_html=True)
-            e["present"] = c3.checkbox("Present", e["present"], key=f"{role_key}_present_{i}", disabled=disabled)
-
-            e["desc"] = st.text_area("Description", e["desc"], key=f"{role_key}_desc_{i}", disabled=disabled)
-
+        if role_key == "Custom":
+            custom_exp = st.text_area(
+                "",
+                height=400,
+                key=f"{role_key}_experience",
+                disabled=disabled
+            )
+            data["Experience"] = parse_custom_experience(custom_exp)
+        else:
+            if st.session_state.edit_mode[role_key] and st.button(f"Add Exp {role_key}"):
+                data["Experience"].append({
+                    "company": "",
+                    "role": "",
+                    "start": date.today(),
+                    "end": date.today(),
+                    "present": False,
+                    "desc": ""
+                })
+    
+            for i, e in enumerate(data["Experience"]):
+                c1, c2 = st.columns([3.5, 1])
+                c1.markdown(f"##### Experience {i+1}")
+                if st.session_state.edit_mode[role_key] and c2.button("Delete", key=f"{role_key}_del_exp_{i}", use_container_width=True):
+                    data["Experience"].pop(i)
+                    st.rerun()
+    
+                c1, c2 = st.columns(2)
+                e["company"] = c1.text_input("Company", e["company"], key=f"{role_key}_comp_{i}", disabled=disabled)
+                e["role"] = c2.text_input("Role", e["role"], key=f"{role_key}_role_{i}", disabled=disabled)
+    
+                c1, c2, c3 = st.columns(3)
+                e["start"] = c1.date_input("Start", e["start"], key=f"{role_key}_start_{i}", disabled=disabled)
+                e["end"] = c2.date_input("End", e["end"], key=f"{role_key}_end_{i}", disabled=disabled)
+                c3.markdown("""<div style="height:34px;"></div>""", unsafe_allow_html=True)
+                e["present"] = c3.checkbox("Present", e["present"], key=f"{role_key}_present_{i}", disabled=disabled)
+    
+                e["desc"] = st.text_area("Description", e["desc"], key=f"{role_key}_desc_{i}", disabled=disabled)
+    
         # ---------- PROJECTS ----------
         st.subheader("Projects")
 
